@@ -22,16 +22,15 @@ export default function AppTrafficBySite({ title, subheader, list, ...other }) {
           sx={{
             display: 'grid',
             gap: 2,
-            gridTemplateColumns: 'repeat(2, 1fr)',
+            gridTemplateColumns: 'repeat(8, 1fr)',
           }}
         >
           {list.map((site) => (
-            <Paper key={site.name} variant="outlined" sx={{ py: 2.5, textAlign: 'center' }}>
-              <Box sx={{ mb: 0.5 }}>{site.icon}</Box>
+            <Paper key={site.name} variant="outlined" sx={{ py: 0, textAlign: 'center' }}>
 
-              <Typography variant="h6">{fShortenNumber(site.value)}</Typography>
+              <Typography variant="h6" sx={{pt: 1}}>{site.value}</Typography>
 
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              <Typography variant="body2" sx={{ pb: 1, color: 'text.secondary' }}>
                 {site.name}
               </Typography>
             </Paper>
