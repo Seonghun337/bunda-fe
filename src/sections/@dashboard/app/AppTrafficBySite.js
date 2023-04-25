@@ -28,7 +28,7 @@ export default function AppTrafficBySite({ title, subheader, list, ...other }) {
           {list.map((site) => (
             <Paper key={site.name} variant="outlined" sx={{ py: 0, textAlign: 'center' }}>
 
-              <Typography variant="h6" sx={{pt: 1}}>{site.value}</Typography>
+              <Typography variant="subtitle1" sx={{pt: 1}}>{site.value}</Typography>
 
               <Typography variant="body2" sx={{ pb: 1, color: 'text.secondary' }}>
                 {site.name}

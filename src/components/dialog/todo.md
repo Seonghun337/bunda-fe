@@ -1,0 +1,10 @@
+dialog list
+- CreateBacktestDialog
+- CreateRuleDialog
+- CreateConditionDialog
+- CreateOrderRulesDialog
+- CreateTargetStatisticsDialog
+- CreateCompareRangeDialog
+- CreateOrderRuleDialog
+- CreateQtyRuleDialog
+- CreatePriceRuleDialog
