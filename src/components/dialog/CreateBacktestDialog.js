@@ -5,19 +5,29 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {useState} from 'react';
 import { postBacktest } from 'api/backtestApi';
+import { CreateRuleDialog } from 'components/dialog';
 
 export default function CreateBacktestDialog({
     opened,
     onClose
 }) {
 
-const [_startDate, setStartDate] = useState("");
-const [_endDate, setEndDate] = useState("")
-const [_strategy, setStrategy] = useState("");
-const [_name, setName] = useState("");
-const [_initBalance, setInitBalance] = useState(0);
-const [error, setError] = useState(null);
-const [loading, setLoading] = useState(false);
+    const [_startDate, setStartDate] = useState("");
+    const [_endDate, setEndDate] = useState("")
+    const [_strategy, setStrategy] = useState({rules:[]});
+    const [_name, setName] = useState("");
+    const [_initBalance, setInitBalance] = useState(0);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [createRuleDialogOpen, setCreateRuleDialogOpen] = useState(false);
+
+    const handleCreateRuleDialogOpen = (event) => {
+      setCreateRuleDialogOpen(true);
+    }
+
+    const handleCreateRuleDialogClose = () => {
+      setCreateRuleDialogOpen(false);
+    }
 
     async function doBackTest() {
         const req = {
@@ -67,7 +77,12 @@ const [loading, setLoading] = useState(false);
                         </DialogContentText>
                     </Grid>
                     <Grid item lg={12}>
-                        <TextField fullWidth label="테스트이름" value={_name}/>
+                        <TextField
+                            fullWidth
+                            label="테스트이름"
+                            value={_name}
+                            onChange={(e) => setName(e.target.value)}
+                            />
                     </Grid>
                     <Grid item lg={6}>
                         <DatePicker
@@ -92,18 +107,36 @@ const [loading, setLoading] = useState(false);
                         />
                     </Grid>
                     <Grid item lg={12}>
-                        <TextField fullWidth label="초기잔고" value={_initBalance}/>
+                        <TextField
+                            fullWidth
+                            label="초기잔고"
+                            value={_initBalance}
+                            onChange={(e) => setInitBalance(e.target.value)}
+                            onFocus={(e) => e.target.select()}
+                            />
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
                             multiline
-                            rows={30}
+                            rows={15}
                             autoFocus
                             fullWidth
-                            value={_strategy}
+                            value={JSON.stringify(_strategy, null, 4)}
+                            InputProps={{startAdornment: (
+                                <Grid sx={{alignSelf: "start"}}>
+                                    <Button fullWidth onClick={()=>setCreateRuleDialogOpen(true)}>새 규칙 생성</Button>
+                                    <Button fullWidth onClick={()=>setStrategy({})}>초기화</Button>
+                                </Grid>
+                            )}}
                             />
                     </Grid>
                 </Grid>
+
+                <CreateRuleDialog
+                  opened = {createRuleDialogOpen}
+                  onClose = {handleCreateRuleDialogClose}
+                  callback = {(v) => { setStrategy(st => ({...st, rules: [...st.rules, v]})); }}
+                />
             </DialogContent>
             <DialogActions>
                <Button onClick={onClose}>닫기</Button>

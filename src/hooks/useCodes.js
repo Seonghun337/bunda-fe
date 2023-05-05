@@ -1,10 +1,15 @@
 import { useMemo, useEffect, useState } from "react";
 import keyBy from "lodash/keyBy";
-import { getCompareRangeTypes, getStatisticsTypes } from 'api/codeApi';
+import { getCompareRangeTypes, getStatisticsTypes, getTermUnits, getCompareTypes, getQtyTypes, getMarginTypes, getOperatorTypes } from 'api/codeApi';
 
 const CODE_API_MAP = {
     "STATISTICS_TYPES": getStatisticsTypes,
     "COMPARE_RANGE_TYPES": getCompareRangeTypes,
+    "TERM_UNITS": getTermUnits,
+    "COMPARE_TYPES": getCompareTypes,
+    "QTY_TYPES": getQtyTypes,
+    "MARGIN_TYPES": getMarginTypes,
+    "OPERATOR_TYPES": getOperatorTypes,
 }
 
 const EMPTY_CODE = [

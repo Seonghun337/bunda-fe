@@ -5,7 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { postBacktest } from 'api/backtestApi';
-import { getCompareRangeTypes } from 'api/codeApi';
+import useCodes from 'hooks/useCodes';
 
 export default function CreateCompareRangeDialog({
     opened,
@@ -13,7 +13,7 @@ export default function CreateCompareRangeDialog({
     callback
 }) {
 
-const COMPARE_RANGE_TYPES = [];
+const [COMPARE_RANGE_TYPES] = useCodes('COMPARE_RANGE_TYPES');
 const [compareRangeType, setCompareRangeType] = useState("");
 const [_n, setN] = useState(0)
 const [_m, setM] = useState(0);

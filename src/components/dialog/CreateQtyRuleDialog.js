@@ -5,7 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { postBacktest } from 'api/backtestApi';
-import { getStatisticsTypes } from 'api/codeApi';
+import useCodes from 'hooks/useCodes';
 
 export default function CreateCompareRangeDialog({
     opened,
@@ -13,22 +13,18 @@ export default function CreateCompareRangeDialog({
     callback
 }) {
 
-const STATISTICS_TYPES = [];
-const [_statisticsType, setStatisticsType] = useState("");
-const [_termUnit, setTermUnit] = useState("HOUR")
-const [_n, setN] = useState(0.0);
-const [_v1, setV1] = useState(0.0);
-const [_v2, setV2] = useState(0.0);
-const [_v3, setV3] = useState(0.0);
+const [ QTY_TYPES ] = useCodes('QTY_TYPES');
+const [ MARGIN_TYPES ] = useCodes('MARGIN_TYPES');
+
+const [_qtyType, setQtyType] = useState("");
+const [_marginType, setMarginType] = useState("")
+const [_qtyValue, setQtyValue] = useState(0);
 
 function generateJson() {
     return {
-        statisticsType: _statisticsType,
-        termUnit: _termUnit,
-        n: _n,
-        v1: _v1,
-        v2: _v2,
-        v3: _v3,
+        qtyType: _qtyType,
+        marginType: _marginType,
+        qtyValue: _qtyValue,
     }
 }
 
@@ -41,7 +37,7 @@ function generateJson() {
             onClose={onClose}>
 
             <Grid container justifyContent="space-between" alignItems="center">
-                <DialogTitle>대상통계값</DialogTitle>
+                <DialogTitle>수량규칙</DialogTitle>
                 <DialogActions>
                   <Button onClick={onClose} color="secondary" autoFocus>
                     X
@@ -59,11 +55,25 @@ function generateJson() {
                         <TextField
                             select
                             fullWidth
-                            value={_statisticsType}
-                            label="통계값유형"
-                            onChange={(e) => {setStatisticsType(e.target.value)}}
+                            value={_qtyType}
+                            label="수량타입"
+                            onChange={(e) => {setQtyType(e.target.value)}}
                         >
-                            {STATISTICS_TYPES.map((v)=> {
+                            {QTY_TYPES.map((v)=> {
+                                return (<MenuItem id={v.name} value={v.name}>{v.text}</MenuItem>);
+                            })}
+                        </TextField>
+                    </Grid>
+                    <Grid item lg={12}>
+                        <TextField
+                            select
+                            fullWidth
+                            value={_marginType}
+                            disabled = {_qtyType === "FIXED"}
+                            label="가격 기준"
+                            onChange={(e) => {setMarginType(e.target.value)}}
+                        >
+                            {MARGIN_TYPES.map((v)=> {
                                 return (<MenuItem id={v.name} value={v.name}>{v.text}</MenuItem>);
                             })}
                         </TextField>
@@ -72,36 +82,9 @@ function generateJson() {
                         <TextField
                             fullWidth
                             onFocus={(e) => e.target.select()}
-                            value={_n}
-                            label="n"
-                            onChange={(e) => {setN(e.target.value)}}
-                        />
-                    </Grid>
-                    <Grid item lg={12}>
-                        <TextField
-                            fullWidth
-                            onFocus={(e) => e.target.select()}
-                            value={_v1}
-                            label="파라미터1"
-                            onChange={(e) => {setV1(e.target.value)}}
-                        />
-                    </Grid>
-                    <Grid item lg={12}>
-                        <TextField
-                            fullWidth
-                            onFocus={(e) => e.target.select()}
-                            value={_v2}
-                            label="파라미터2"
-                            onChange={(e) => {setV2(e.target.value)}}
-                        />
-                    </Grid>
-                    <Grid item lg={12}>
-                        <TextField
-                            fullWidth
-                            onFocus={(e) => e.target.select()}
-                            value={_v3}
-                            label="파라미터3"
-                            onChange={(e) => {setV3(e.target.value)}}
+                            value={_qtyValue}
+                            label="값"
+                            onChange={(e) => {setQtyValue(e.target.value)}}
                         />
                     </Grid>
                 </Grid>
