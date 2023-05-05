@@ -28,7 +28,7 @@ import Iconify from 'components/iconify';
 import Scrollbar from 'components/scrollbar';
 // sections
 import { getBacktests } from 'api/backtestApi';
-import { CreateBacktestDialog } from 'components/dialog';
+import { CreateBacktestDialog, CreateCompareRangeDialog, CreateTargetStatisticsDialog } from 'components/dialog';
 
 // ----------------------------------------------------------------------
 const TABLE_HEAD = [
@@ -199,9 +199,10 @@ export default function BacktestListPage() {
         </Card>
       </Container>
 
-      <CreateBacktestDialog
+      <CreateTargetStatisticsDialog
         opened = {createDialogOpen}
         onClose = {handleCreateDialogClose}
+        callback = {(v) => { alert(JSON.stringify(v))} }
       />
 
       <Popover
