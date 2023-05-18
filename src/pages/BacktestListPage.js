@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 // @mui
 import {
   Card,
+  Link,
   Table,
   Stack,
   Paper,
@@ -141,7 +142,14 @@ export default function BacktestListPage() {
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
-                        <TableCell align="left"> {id} </TableCell>
+                        <TableCell align="left">
+                            <Link
+                                href={`backtest/${id}`}
+                                target="_self"
+                            >
+                                {id}
+                            </Link>
+                        </TableCell>
                         <TableCell align="left"> {name} </TableCell>
                         <TableCell align="left"> {status} </TableCell>
                         <TableCell align="left"> {requestDateTime} </TableCell>

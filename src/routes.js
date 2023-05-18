@@ -11,6 +11,8 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import DashboardPage from './pages/DashboardPage';
 import BacktestListPage from './pages/BacktestListPage';
+import BacktestDetailPage from './pages/BacktestDetailPage';
+import MarketAnalysisPage from './pages/MarketAnalysisPage';
 
 
 // ----------------------------------------------------------------------
@@ -24,6 +26,8 @@ export default function Router() {
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <DashboardPage /> },
         { path: 'backtest', element: <BacktestListPage /> },
+        { path: 'backtest/:id', element: <BacktestDetailPage/> },
+        { path: 'analysis', element: <MarketAnalysisPage/> },
         { path: 'example', element: <DashboardAppPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
