@@ -26,11 +26,11 @@ const navConfig = [
       path: '/dashboard/example',
       icon: icon('ic_disabled'),
     },
-//  {
-//    title: 'blog',
-//    path: '/dashboard/blog',
-//    icon: icon('ic_blog'),
-//  },
+  {
+    title: 'setting',
+    path: '/dashboard/settings',
+    icon: icon('ic_setting'),
+  },
 //  {
 //    title: 'login',
 //    path: '/login',

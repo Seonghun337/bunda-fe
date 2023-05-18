@@ -13,6 +13,7 @@ import DashboardPage from './pages/DashboardPage';
 import BacktestListPage from './pages/BacktestListPage';
 import BacktestDetailPage from './pages/BacktestDetailPage';
 import MarketAnalysisPage from './pages/MarketAnalysisPage';
+import VariableSettingPage from './pages/VariableSettingPage';
 
 
 // ----------------------------------------------------------------------
@@ -28,6 +29,7 @@ export default function Router() {
         { path: 'backtest', element: <BacktestListPage /> },
         { path: 'backtest/:id', element: <BacktestDetailPage/> },
         { path: 'analysis', element: <MarketAnalysisPage/> },
+        { path: 'settings', element: <VariableSettingPage /> },
         { path: 'example', element: <DashboardAppPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },

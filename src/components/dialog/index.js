@@ -7,3 +7,4 @@ export { default as CreateOrderRulesDialog } from './CreateOrderRulesDialog';
 export { default as CreateOrderRuleDialog } from './CreateOrderRuleDialog';
 export { default as CreatePriceRuleDialog } from './CreatePriceRuleDialog';
 export { default as CreateQtyRuleDialog } from './CreateQtyRuleDialog';
+export { default as VariableDialog } from './VariableDialog';
