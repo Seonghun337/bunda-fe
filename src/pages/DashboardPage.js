@@ -1,10 +1,13 @@
 import { Helmet } from 'react-helmet-async';
 import { faker } from '@faker-js/faker';
+import { useState, useEffect } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
+import useInterval from 'hooks/useInterval';
 // components
-import Iconify from '../components/iconify';
+import { getSummary } from 'api/dashboardApi';
+
 // sections
 import {
   AppTasks,
@@ -21,10 +24,52 @@ import {
 } from '../sections/@dashboard/app';
 // utils
 import { fPercent, fCurrency } from '../utils/formatNumber';
+import Iconify from '../components/iconify';
+
+
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
   const theme = useTheme();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [autoRefresh, setAutoRefresh] = useState(10000);
+  const [summary, setSummary] = useState({})
+  const defaultSummary = {
+    totalBalance: 0,
+    accumulatedRoe: 0,
+    maximumRoe: 0,
+    dailyRoe: 0,
+    yesterdayRoe: 0,
+    dailyMeanRoe: 0
+  }
+  useEffect(()=>{
+    fetchSummary();
+  }, []);
+
+  useInterval(
+      () => {
+        // Your custom logic here
+        fetchSummary();
+      },
+      // Delay in milliseconds or null to stop it
+      autoRefresh === 0 ? autoRefresh : null,
+    )
+
+  const fetchSummary = async () => {
+    try {
+      setError(null);
+      setSummary({});
+      setLoading(true);
+      const response = await getSummary();
+      setSummary(response.data);
+    } catch (e) {
+      setError(e);
+    }
+    console.log(JSON.stringify(summary));
+    setLoading(false);
+  }
+
 
   return (
     <>
@@ -36,33 +81,38 @@ export default function DashboardAppPage() {
         <Typography variant="h4" sx={{ mb: 5 }}>
           대시보드
         </Typography>
+        {error && (<Typography variant="h5" color="error">
+                    서버와 연결에 실패했습니다.
+                  </Typography>
+                )}
+
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={4}>
-            <AppWidgetDollar title="Total Balance" total={'$ 21537'} color="primary" icon={'ant-design:android-filled'} />
+            <AppWidgetDollar title="Total Balance" total={summary.totalBalance} color="primary" icon={'ant-design:android-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={4}>
-            <AppWidgetPercent title="Accumulated ROE" total={159.3} color="secondary" icon={'ant-design:bug-filled'} />
+            <AppWidgetPercent title="Accumulated ROE" total={summary.accumulatedRoe} color="secondary" icon={'ant-design:bug-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={4}>
-            <AppWidgetPercent title="Maximum ROE" total={234.8} color="info" icon={'ant-design:bug-filled'} />
+            <AppWidgetPercent title="Maximum ROE" total={summary.maximumRoe} color="info" icon={'ant-design:bug-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={4}>
-            <AppWidgetPercent title="Daily ROE" total={19.2} color="warning" icon={'ant-design:apple-filled'} />
+            <AppWidgetPercent title="Daily ROE" total={summary.dailyRoe} color="warning" icon={'ant-design:apple-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={4}>
-            <AppWidgetPercent title="Yesterday ROE" total={4.5} color="success" icon={'ant-design:windows-filled'} />
+            <AppWidgetPercent title="Yesterday ROE" total={summary.yesterdayRoe} color="success" icon={'ant-design:windows-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={4}>
-                <AppWidgetPercent title="Daily Mean ROE" total={13.142} color="primary" icon={'ant-design:bug-filled'} />
+                <AppWidgetPercent title="Daily Mean ROE" total={summary.dailyMeanRoe} color="primary" icon={'ant-design:bug-filled'} />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={12}>
+          <Grid item xs={12} md={12} lg={12}>
             <AppTrafficBySite
               title=""
               list={[

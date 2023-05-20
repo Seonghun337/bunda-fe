@@ -13,9 +13,9 @@ export function fCurrency(number) {
 }
 
 export function fPercent(number) {
-  const format = number ? numeral(Number(number) / 100).format('0.0%') : '';
+  const format = number ? numeral(Number(number) / 100).format('0.00%') : '0%';
 
-  return result(format, '.0');
+  return result(format, '.00');
 }
 
 export function fShortenNumber(number) {
@@ -27,7 +27,7 @@ export function fShortenNumber(number) {
 export function fData(number) {
   const format = number ? numeral(number).format('0.0 b') : '';
 
-  return result(format, '.0');
+  return result(format, '.00');
 }
 
 function result(format, key = '.00') {
