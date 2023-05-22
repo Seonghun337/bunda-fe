@@ -29,27 +29,34 @@ import Label from 'components/label';
 import Iconify from 'components/iconify';
 import Scrollbar from 'components/scrollbar';
 // sections
-import { getVariables, updateVariable, createVariable, deleteVariable } from 'api/variableApi';
-import { VariableDialog } from 'components/dialog'
+import { getOrders } from 'api/historyApi';
 
 // ----------------------------------------------------------------------
 const TABLE_HEAD = [
-  { id: 'key', label: 'KEY' },
-  { id: 'value', label: 'VALUE' },
-  { id: 'update', label: ' ' },
+  { id: 'orderId', label: '주문번호' },
+  { id: 'bybitOrderId', label: '바이비트주문번호' },
+  { id: 'orderType', label: '유형' },
+  { id: 'side', label: '롱/숏' },
+  { id: 'status', label: '주문상태' },
+  { id: 'bybitStatus', label: '바이비트주문상태' },
+  { id: 'openPrice', label: '주문가격' },
+  { id: 'qty', label: '수량' },
+  { id: 'stopLoss', label: 'SL' },
+  { id: 'takeProfit', label: 'TP' },
+  { id: 'requestedDateTime', label: '요청일시' },
+  { id: 'openedDateTime', label: '주문일시' },
+  { id: 'filledDateTime', label: '체결일시' },
+  { id: 'closedDateTime', label: '종결일시' },
+  { id: 'closeType', label: '종결유형' },
+  { id: 'reduceOnly', label: '시장가종결여부' },
 ];
 
 // ----------------------------------------------------------------------
-export default function VariableSettingPage() {
+export default function OrderListPage() {
   const size = 10;
   const [page, setPage] = useState(0);
   const [content, setContent] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
-
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
-  const [selectedKey, setSelectedKey] = useState();
-  const [selectedValue, setSelectedValue] = useState();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -61,7 +68,7 @@ export default function VariableSettingPage() {
         setContent([]);
         // loading 상태를 true 로 바꿉니다.
         setLoading(true);
-        const response = await getVariables(page, size);
+        const response = await getOrders(page, size);
         setContent(response.data.content);
         setTotalCount(response.data.total);
         console.log(response.data.total);
@@ -85,24 +92,21 @@ export default function VariableSettingPage() {
   return (
     <>
       <Helmet>
-        <title> 변수설정 </title>
+        <title> 주문목록 </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            변수 목록
+            주문 목록
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setCreateDialogOpen(true)}>
-            새 변수
-          </Button>
         </Stack>
 
         <Card>
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer sx={{ minWidth: 2000 }}>
               <Table>
-                <TableHead>
+                <TableHead sx={{ overflow: 'auto' }}>
                     {TABLE_HEAD.map((cell) => (
                         <TableCell
                             key={cell.id}
@@ -114,18 +118,27 @@ export default function VariableSettingPage() {
                 </TableHead>
                 <TableBody>
                   {content.map((row) => {
-                    const { key, value } = row;
+                    const { id, bybitOrderId, orderType, side, status, bybitStatus, openPrice, qty, stopLoss,
+                     takeProfit, requestedDateTime, openedDateTime, filledDateTime, closedDateTime, closeType, reduceOnly } = row;
 
                     return (
-                      <TableRow hover key={key} tabIndex={-1}>
-                        <TableCell align="left"> {key} </TableCell>
-                        <TableCell align="left"> {value} </TableCell>
-                        <TableCell width="200" align="left">
-                            <Button onClick={() => {  setSelectedValue(value); setSelectedKey(key); setUpdateDialogOpen(true);}}>
-                                수정
-                            </Button>
-                            <Button onClick={() => { deleteVariable(key); window.location.replace("") }}>삭제</Button>
-                        </TableCell>
+                      <TableRow hover key={id} tabIndex={-1}>
+                        <TableCell align="left"> {id} </TableCell>
+                        <TableCell align="left"> {bybitOrderId} </TableCell>
+                        <TableCell align="left"> {orderType} </TableCell>
+                        <TableCell align="left"> {side} </TableCell>
+                        <TableCell align="left"> {status} </TableCell>
+                        <TableCell align="left"> {bybitStatus} </TableCell>
+                        <TableCell align="left"> {openPrice} </TableCell>
+                        <TableCell align="left"> {qty} </TableCell>
+                        <TableCell align="left"> {stopLoss} </TableCell>
+                        <TableCell align="left"> {takeProfit} </TableCell>
+                        <TableCell align="left"> {requestedDateTime} </TableCell>
+                        <TableCell align="left"> {openedDateTime} </TableCell>
+                        <TableCell align="left"> {filledDateTime} </TableCell>
+                        <TableCell align="left"> {closedDateTime} </TableCell>
+                        <TableCell align="left"> {closeType} </TableCell>
+                        <TableCell align="left"> {reduceOnly} </TableCell>
                       </TableRow>
                     );
                   })}
@@ -148,23 +161,6 @@ export default function VariableSettingPage() {
             onPageChange={handleChangePage}
           />
         </Card>
-
-        <VariableDialog
-          opened = {createDialogOpen}
-          onClose = {() => setCreateDialogOpen(false)}
-          callback = {(v) => { createVariable(v); window.location.replace("") }}
-          isNew
-          paramKey = ""
-          paramValue = ""
-        />
-        <VariableDialog
-          opened = {updateDialogOpen}
-          onClose = {() => setUpdateDialogOpen(false)}
-          callback = {(v) => { updateVariable(v); window.location.replace("") }}
-          isNew={false}
-          paramKey = {selectedKey}
-          paramValue = {selectedValue}
-        />
       </Container>
 
     </>

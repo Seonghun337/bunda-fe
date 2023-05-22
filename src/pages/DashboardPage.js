@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
-import useInterval from 'hooks/useInterval';
+import useInterval from 'use-interval'
 // components
 import { getSummary } from 'api/dashboardApi';
 
@@ -33,16 +33,15 @@ export default function DashboardAppPage() {
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [autoRefresh, setAutoRefresh] = useState(10000);
-  const [summary, setSummary] = useState({})
   const defaultSummary = {
-    totalBalance: 0,
+    totalBalance: "100",
     accumulatedRoe: 0,
     maximumRoe: 0,
     dailyRoe: 0,
     yesterdayRoe: 0,
     dailyMeanRoe: 0
   }
+  const [summary, setSummary] = useState(defaultSummary)
   useEffect(()=>{
     fetchSummary();
   }, []);
@@ -52,17 +51,16 @@ export default function DashboardAppPage() {
         // Your custom logic here
         fetchSummary();
       },
+      1000
       // Delay in milliseconds or null to stop it
-      autoRefresh === 0 ? autoRefresh : null,
     )
 
   const fetchSummary = async () => {
     try {
-      setError(null);
-      setSummary({});
       setLoading(true);
       const response = await getSummary();
       setSummary(response.data);
+      setError(null);
     } catch (e) {
       setError(e);
     }

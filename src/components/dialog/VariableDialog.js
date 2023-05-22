@@ -23,7 +23,7 @@ export default function CreateBacktestDialog({
     const [loading, setLoading] = useState(false);
 
     function generateData() {
-        return { key: _key, value: _value }
+        return { key: _key ?? paramKey, value: _value ?? paramValue }
     }
 
     return (
@@ -51,7 +51,7 @@ export default function CreateBacktestDialog({
                 >
                     <Grid item sm={12}>
                         <DialogContentText>
-                            변수 설정
+                            변수 설정 {_key} {_value}
                         </DialogContentText>
                     </Grid>
                     <Grid item sm={6}>

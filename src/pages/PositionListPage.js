@@ -29,27 +29,33 @@ import Label from 'components/label';
 import Iconify from 'components/iconify';
 import Scrollbar from 'components/scrollbar';
 // sections
-import { getVariables, updateVariable, createVariable, deleteVariable } from 'api/variableApi';
-import { VariableDialog } from 'components/dialog'
+import { getPositions } from 'api/historyApi';
 
 // ----------------------------------------------------------------------
 const TABLE_HEAD = [
-  { id: 'key', label: 'KEY' },
-  { id: 'value', label: 'VALUE' },
-  { id: 'update', label: ' ' },
+  { id: 'createdDateTime', label: 'createdDateTime' },
+  { id: 'availableBalance', label: 'availableBalance' },
+  { id: 'longPositionSize', label: 'longPositionSize' },
+  { id: 'shortPositionSize', label: 'shortPositionSize' },
+  { id: 'longEntryPrice', label: 'longEntryPrice' },
+  { id: 'shortEntryPrice', label: 'shortEntryPrice' },
+  { id: 'nowPrice', label: 'nowPrice' },
+  { id: 'longPositionMargin', label: 'longPositionMargin' },
+  { id: 'shortPositionMargin', label: 'shortPositionMargin' },
+  { id: 'longUnrealizedPnl', label: 'longUnrealizedPnl' },
+  { id: 'shortUnrealizedPnl', label: 'shortUnrealizedPnl' },
+  { id: 'longActiveOrderCount', label: 'longActiveOrderCount' },
+  { id: 'shortActiveOrderCount', label: 'shortActiveOrderCount' },
+  { id: 'longLiquidPrice', label: 'longLiquidPrice' },
+  { id: 'shortLiquidPrice', label: 'shortLiquidPrice' },
 ];
 
 // ----------------------------------------------------------------------
-export default function VariableSettingPage() {
+export default function PositionListPage() {
   const size = 10;
   const [page, setPage] = useState(0);
   const [content, setContent] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
-
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
-  const [selectedKey, setSelectedKey] = useState();
-  const [selectedValue, setSelectedValue] = useState();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -61,7 +67,7 @@ export default function VariableSettingPage() {
         setContent([]);
         // loading 상태를 true 로 바꿉니다.
         setLoading(true);
-        const response = await getVariables(page, size);
+        const response = await getPositions(page, size);
         setContent(response.data.content);
         setTotalCount(response.data.total);
         console.log(response.data.total);
@@ -85,24 +91,21 @@ export default function VariableSettingPage() {
   return (
     <>
       <Helmet>
-        <title> 변수설정 </title>
+        <title> 포지션목록 </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            변수 목록
+            포지션 목록
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setCreateDialogOpen(true)}>
-            새 변수
-          </Button>
         </Stack>
 
         <Card>
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer sx={{ minWidth: 2000 }}>
               <Table>
-                <TableHead>
+                <TableHead sx={{ overflow: 'auto' }}>
                     {TABLE_HEAD.map((cell) => (
                         <TableCell
                             key={cell.id}
@@ -114,18 +117,26 @@ export default function VariableSettingPage() {
                 </TableHead>
                 <TableBody>
                   {content.map((row) => {
-                    const { key, value } = row;
+                    const { createdDateTime, availableBalance, longPositionSize, shortPositionSize, longEntryPrice, shortEntryPrice, nowPrice, longPositionMargin, shortPositionMargin,
+                     longUnrealizedPnl, shortUnrealizedPnl, longActiveOrderCount, shortActiveOrderCount, longLiquidPrice, shortLiquidPrice } = row;
 
                     return (
-                      <TableRow hover key={key} tabIndex={-1}>
-                        <TableCell align="left"> {key} </TableCell>
-                        <TableCell align="left"> {value} </TableCell>
-                        <TableCell width="200" align="left">
-                            <Button onClick={() => {  setSelectedValue(value); setSelectedKey(key); setUpdateDialogOpen(true);}}>
-                                수정
-                            </Button>
-                            <Button onClick={() => { deleteVariable(key); window.location.replace("") }}>삭제</Button>
-                        </TableCell>
+                      <TableRow hover key={createdDateTime} tabIndex={-1}>
+                        <TableCell align="left"> {createdDateTime} </TableCell>
+                        <TableCell align="left"> {availableBalance} </TableCell>
+                        <TableCell align="left"> {longPositionSize} </TableCell>
+                        <TableCell align="left"> {shortPositionSize} </TableCell>
+                        <TableCell align="left"> {longEntryPrice} </TableCell>
+                        <TableCell align="left"> {shortEntryPrice} </TableCell>
+                        <TableCell align="left"> {nowPrice} </TableCell>
+                        <TableCell align="left"> {longPositionMargin} </TableCell>
+                        <TableCell align="left"> {shortPositionMargin} </TableCell>
+                        <TableCell align="left"> {longUnrealizedPnl} </TableCell>
+                        <TableCell align="left"> {shortUnrealizedPnl} </TableCell>
+                        <TableCell align="left"> {longActiveOrderCount} </TableCell>
+                        <TableCell align="left"> {shortActiveOrderCount} </TableCell>
+                        <TableCell align="left"> {longLiquidPrice} </TableCell>
+                        <TableCell align="left"> {shortLiquidPrice} </TableCell>
                       </TableRow>
                     );
                   })}
@@ -148,23 +159,6 @@ export default function VariableSettingPage() {
             onPageChange={handleChangePage}
           />
         </Card>
-
-        <VariableDialog
-          opened = {createDialogOpen}
-          onClose = {() => setCreateDialogOpen(false)}
-          callback = {(v) => { createVariable(v); window.location.replace("") }}
-          isNew
-          paramKey = ""
-          paramValue = ""
-        />
-        <VariableDialog
-          opened = {updateDialogOpen}
-          onClose = {() => setUpdateDialogOpen(false)}
-          callback = {(v) => { updateVariable(v); window.location.replace("") }}
-          isNew={false}
-          paramKey = {selectedKey}
-          paramValue = {selectedValue}
-        />
       </Container>
 
     </>

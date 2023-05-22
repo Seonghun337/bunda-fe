@@ -12,20 +12,25 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
-    title: 'backtest',
-    path: '/dashboard/backtest',
-    icon: icon('ic_blog'),
+      title: 'orders',
+      path: '/dashboard/orders',
+      icon: icon('ic_document'),
   },
+  {
+      title: 'positions',
+      path: '/dashboard/positions',
+      icon: icon('ic_money'),
+  },
+//  {
+//    title: 'backtest',
+//    path: '/dashboard/backtest',
+//    icon: icon('ic_blog'),
+//  },
   {
     title: 'analysis',
     path: '/dashboard/analysis',
     icon: icon('ic_search'),
   },
-    {
-      title: 'dashboard',
-      path: '/dashboard/example',
-      icon: icon('ic_disabled'),
-    },
   {
     title: 'setting',
     path: '/dashboard/settings',

@@ -14,6 +14,8 @@ import BacktestListPage from './pages/BacktestListPage';
 import BacktestDetailPage from './pages/BacktestDetailPage';
 import MarketAnalysisPage from './pages/MarketAnalysisPage';
 import VariableSettingPage from './pages/VariableSettingPage';
+import OrderListPage from './pages/OrderListPage';
+import PositionListPage from './pages/PositionListPage';
 
 
 // ----------------------------------------------------------------------
@@ -29,6 +31,8 @@ export default function Router() {
         { path: 'backtest', element: <BacktestListPage /> },
         { path: 'backtest/:id', element: <BacktestDetailPage/> },
         { path: 'analysis', element: <MarketAnalysisPage/> },
+        { path: 'orders', element: <OrderListPage/> },
+        { path: 'positions', element: <PositionListPage/> },
         { path: 'settings', element: <VariableSettingPage /> },
         { path: 'example', element: <DashboardAppPage /> },
         { path: 'products', element: <ProductsPage /> },
